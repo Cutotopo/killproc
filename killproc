@@ -9,7 +9,6 @@ def getpnm():
   return PIDNAME
 
 try:
-    #pidlist = int(subprocess.check_output(["pidof","-s",procname]))
     pidlist = str((str(subprocess.check_output(["pidof",getpnm()])).lstrip("b'").rstrip("'n\\"))).split(' ')
     for pid in pidlist:
         os.system(f'kill {pid}')
