@@ -3,26 +3,20 @@
 import os
 import sys
 import subprocess
-from time import sleep
-
-CONTINUE = 'true'
-
-def getpid(procname):
-  try:
-    pidlist = int(subprocess.check_output(["pidof","-s",procname]))
-    return pidlist
-  except subprocess.CalledProcessError:
-    quitapp()
 
 def getpnm():
   PIDNAME = str(sys.argv[1])
   return PIDNAME
 
-def quitapp():
-  exit(0)
-
-
-while (CONTINUE == 'true'):
-  print(f'Killing PID {getpid(getpnm())}...')
-  subprocess.check_output(["kill",str(getpid(getpnm()))])
-  #sleep(1)
+try:
+    #pidlist = int(subprocess.check_output(["pidof","-s",procname]))
+    pidlist = str((str(subprocess.check_output(["pidof",getpnm()])).lstrip("b'").rstrip("'n\\"))).split(' ')
+    for pid in pidlist:
+        os.system(f'kill {pid}')
+    exit(0)
+except subprocess.CalledProcessError:
+    print('This process doesn''t exist or is not running.')
+    exit(1)
+except IndexError:
+    print('Please type the process'' name as the first argument.')
+    exit(1)
