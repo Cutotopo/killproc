@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+import os
+import sys
+import subprocess
+from time import sleep
+
+CONTINUE = 'true'
+
+def getpid(procname):
+  try:
+    pidlist = int(subprocess.check_output(["pidof","-s",procname]))
+    return pidlist
+  except subprocess.CalledProcessError:
+    quitapp()
+
+def getpnm():
+  PIDNAME = str(sys.argv[1])
+  return PIDNAME
+
+def quitapp():
+  exit(0)
+
+
+while (CONTINUE == 'true'):
+  print(f'Killing PID {getpid(getpnm())}...')
+  subprocess.check_output(["kill",str(getpid(getpnm()))])
+  #sleep(1)
