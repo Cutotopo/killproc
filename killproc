@@ -4,18 +4,29 @@ import os
 import sys
 import subprocess
 
-def getpnm():
-  PIDNAME = str(sys.argv[1])
+def getpnm(num):
+  PIDNAME = str(sys.argv[num])
   return PIDNAME
 
 try:
-    pidlist = str((str(subprocess.check_output(["pidof",getpnm()])).lstrip("b'").rstrip("'n\\"))).split(' ')
-    for pid in pidlist:
-        os.system(f'kill {pid}')
-    exit(0)
+    if (getpnm(1) == '-s'):
+        pidlist = str((str(subprocess.check_output(["pidof",getpnm(2)])).lstrip("b'").rstrip("'n\\"))).split(' ')
+        for pid in pidlist:
+            os.system(f'sudo kill {pid}')
+        exit(0)
+    else:
+        pidlist = str((str(subprocess.check_output(["pidof",getpnm(1)])).lstrip("b'").rstrip("'n\\"))).split(' ')
+        for pid in pidlist:
+            os.system(f'kill {pid}')
+        exit(0)
 except subprocess.CalledProcessError:
-    print('This process doesn''t exist or is not running.')
+    print('This process doesn\'t exist or is not running.')
     exit(1)
 except IndexError:
-    print('Please type the process'' name as the first argument.')
-    exit(1)
+    try:
+        if (getpnm(1) == '-s'):
+            print('Please type the process\' name as the second argument.')
+            exit(1)
+    except IndexError:
+        print('Please type the process\' name as the first argument.')
+        exit(1)
